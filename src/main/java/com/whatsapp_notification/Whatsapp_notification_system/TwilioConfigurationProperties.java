@@ -1,11 +1,17 @@
 package com.whatsapp_notification.Whatsapp_notification_system;
 
+// Import statements for validation
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@ConfigurationProperties(prefix = "com.divyansh.twilio")
+@ConfigurationProperties(prefix = "com.divyansh.twilio") // Make sure this matches your application.yaml
 public class TwilioConfigurationProperties {
+
     @NotBlank
     @Pattern(regexp = "^AC[0-9a-fA-F]{32}$")
     private String accountSid;
@@ -42,9 +48,24 @@ public class TwilioConfigurationProperties {
         this.messagingSid = messagingSid;
     }
 
-    @Valid
-    private NewArticleNotification newArticleNotification = newArticleNotification();
+    // --- FIXES ARE HERE ---
 
+    @Valid // 1. Was @valid (lowercase)
+    private NewArticleNotification newArticleNotification = new NewArticleNotification(); // 2. Was new newArticleNotification()
+
+    // 3. ADDED getter for the nested object
+    public NewArticleNotification getNewArticleNotification() {
+        return newArticleNotification;
+    }
+
+    // 4. ADDED setter for the nested object
+    public void setNewArticleNotification(NewArticleNotification newArticleNotification) {
+        this.newArticleNotification = newArticleNotification;
+    }
+    // --- END OF FIXES ---
+
+
+    // This inner class is correct as you had it
     class NewArticleNotification {
 
         @NotBlank
